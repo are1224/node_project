@@ -1,41 +1,20 @@
-var express = require('express'),
-    http=require('http'),
-    path=require('path');
-
-var static = require('serve-static');
-
-var cors = require('cors');
-
-//const http = require('http');
+const https = require('https');
 const os = require('os');
 const socketIO = require('socket.io');
+const nodeStatic = require('node-static');
+const fs = require('fs');
 
-var bodyParser = require('body-parser');
+const options = {
+	key: fs.readFileSync('./keys/private.pem'),
+	cert: fs.readFileSync('./keys/public.pem')
+};
 
-const PORT = process.env.PORT || 8000;
+let fileServer = new(nodeStatic.Server)();
+let app = https.createServer(options,(req,res)=>{
+    fileServer.serve(req,res);
+}).listen(8000);
 
-var app = express();
-
-app.set("port", PORT);
-
-app.use('/', static(path.join(__dirname, 'public')));
-
-app.use(bodyParser.urlencoded({ extends: true }));
-app.use(bodyParser.json());
-
-var router = express.Router();
-
-app.use(cors());
-
-app.get("/", function(req, res){ 
-    res.header("Access-Control-Allow-Origin", "*");
-    res.sendFile(path.join(__dirname, '/public/rtc.html'));
-});
-
-var server = http.createServer(app);
-
-var io = socketIO.listen(server);
-
+let io = socketIO.listen(app);
 io.sockets.on('connection',socket=>{
     function log() {
         let array = ['Message from server:'];
@@ -72,8 +51,4 @@ io.sockets.on('connection',socket=>{
     });
 
 
-});
-
-server.listen(app.get('port'),function(){
-    console.log('익스프레스 서버를 시작했습니다. : '+app.get('port'));
 });
