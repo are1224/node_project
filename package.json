@@ -1,22 +1,20 @@
 {
-  "name": "multi_chat",
+  "name": "peer_test",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "start": "index.js"
+    "start": "node server.js",
+    "watch": "npx watchify ./public/main.js -o ./public/bundle.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "fs": "0.0.1-security",
-    "http": "0.0.1-security",
-    "https": "^1.0.0",
-    "node-static": "^0.7.11",
-    "os": "^0.1.1",
-    "socket.io": "^2.3.0",
-    "socket.io-client": "^2.3.0"
+    "simple-peer": "^9.7.2",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "watchify": "^3.11.1"
   }
 }
